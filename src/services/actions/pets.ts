@@ -1,0 +1,80 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { createPublicToken } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/server";
+import { getCurrentProfile, requireUser } from "@/services/auth";
+import { petSchema, publicSettingsSchema } from "@/validations/pets";
+
+export async function createPet(values: unknown) {
+  const user = await requireUser();
+  const profile = await getCurrentProfile();
+  const parsed = petSchema.safeParse(values);
+  if (!parsed.success) return { ok: false, message: "Revisa los datos de la mascota." };
+
+  const supabase = await createClient();
+  const ownerId = profile?.role === "admin" && parsed.data.owner_id ? parsed.data.owner_id : user.id;
+  const token = createPublicToken(parsed.data.name);
+
+  const { data, error } = await supabase
+    .from("pets")
+    .insert({
+      ...parsed.data,
+      owner_id: ownerId,
+      breed: parsed.data.breed || null,
+      sex: parsed.data.sex || null,
+      birth_date: parsed.data.birth_date || null,
+      color: parsed.data.color || null,
+      weight: parsed.data.weight === "" ? null : parsed.data.weight,
+      photo_url: parsed.data.photo_url || null,
+      public_token: token
+    })
+    .select("id")
+    .single();
+
+  if (error) return { ok: false, message: error.message };
+
+  await supabase.from("public_profile_settings").insert({ pet_id: data.id });
+  revalidatePath("/pets");
+  redirect(`/pets/${data.id}`);
+}
+
+export async function updatePet(id: string, values: unknown) {
+  await requireUser();
+  const parsed = petSchema.safeParse(values);
+  if (!parsed.success) return { ok: false, message: "Revisa los datos de la mascota." };
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("pets")
+    .update({
+      ...parsed.data,
+      breed: parsed.data.breed || null,
+      sex: parsed.data.sex || null,
+      birth_date: parsed.data.birth_date || null,
+      color: parsed.data.color || null,
+      weight: parsed.data.weight === "" ? null : parsed.data.weight,
+      photo_url: parsed.data.photo_url || null
+    })
+    .eq("id", id);
+
+  if (error) return { ok: false, message: error.message };
+  revalidatePath(`/pets/${id}`);
+  redirect(`/pets/${id}`);
+}
+
+export async function updatePublicSettings(petId: string, values: unknown) {
+  await requireUser();
+  const parsed = publicSettingsSchema.safeParse(values);
+  if (!parsed.success) return { ok: false, message: "Revisa la configuración pública." };
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("public_profile_settings")
+    .upsert({ pet_id: petId, ...parsed.data }, { onConflict: "pet_id" });
+
+  if (error) return { ok: false, message: error.message };
+  revalidatePath(`/pets/${petId}`);
+  return { ok: true, message: "Privacidad actualizada." };
+}

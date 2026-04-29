@@ -1,0 +1,37 @@
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { PageHeader } from "@/components/layout/page-header";
+import { createClient } from "@/lib/supabase/server";
+import { formatDate } from "@/lib/utils";
+import type { VeterinaryRecord } from "@/types";
+
+export default async function AdminRecordsPage() {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("veterinary_records")
+    .select("*")
+    .order("date", { ascending: false })
+    .returns<VeterinaryRecord[]>();
+  const records = data ?? [];
+
+  return (
+    <>
+      <PageHeader title="Registros admin" description="Listado global de registros veterinarios." />
+      <div className="space-y-3">
+        {records.map((record) => (
+          <Card key={record.id}>
+            <CardContent className="flex flex-col gap-3 p-5 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <Badge>{record.record_type}</Badge>
+                <h2 className="mt-2 font-semibold">{record.title}</h2>
+                <p className="text-sm text-muted-foreground">{record.description ?? "Sin descripción"}</p>
+              </div>
+              <p className="text-sm text-muted-foreground">{formatDate(record.date)}</p>
+            </CardContent>
+          </Card>
+        ))}
+        {records.length === 0 ? <p className="text-sm text-muted-foreground">No hay registros creados.</p> : null}
+      </div>
+    </>
+  );
+}
