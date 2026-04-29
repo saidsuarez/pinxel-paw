@@ -10,6 +10,7 @@ MVP web para registros veterinarios digitales con NFC, construido con Next.js 15
 - CRUD inicial de mascotas y creación de registros médicos.
 - Perfil público NFC en `/p/[publicToken]`.
 - Privacidad pública configurable por mascota.
+- Fotos de mascotas en Supabase Storage bucket `pet-photos`.
 - RLS inicial para clientes, admin y vista pública.
 
 ## Stack
