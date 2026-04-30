@@ -8,20 +8,26 @@ import { getCurrentProfile, requireUser } from "@/services/auth";
 import { petSchema, publicSettingsSchema } from "@/validations/pets";
 
 export async function createPet(values: unknown) {
-  const user = await requireUser();
+  await requireUser();
   const profile = await getCurrentProfile();
+  if (profile?.role !== "admin") {
+    return { ok: false, message: "Solo el administrador puede crear mascotas." };
+  }
+
   const parsed = petSchema.safeParse(values);
   if (!parsed.success) return { ok: false, message: "Revisa los datos de la mascota." };
+  if (!parsed.data.owner_id) {
+    return { ok: false, message: "Selecciona el cliente propietario de la mascota." };
+  }
 
   const supabase = await createClient();
-  const ownerId = profile?.role === "admin" && parsed.data.owner_id ? parsed.data.owner_id : user.id;
   const token = createPublicToken(parsed.data.name);
 
   const { data, error } = await supabase
     .from("pets")
     .insert({
       ...parsed.data,
-      owner_id: ownerId,
+      owner_id: parsed.data.owner_id,
       breed: parsed.data.breed || null,
       sex: parsed.data.sex || null,
       birth_date: parsed.data.birth_date || null,
@@ -44,19 +50,23 @@ export async function updatePet(id: string, values: unknown) {
   await requireUser();
   const parsed = petSchema.safeParse(values);
   if (!parsed.success) return { ok: false, message: "Revisa los datos de la mascota." };
+  const profile = await getCurrentProfile();
 
   const supabase = await createClient();
+  const payload = {
+    ...parsed.data,
+    breed: parsed.data.breed || null,
+    sex: parsed.data.sex || null,
+    birth_date: parsed.data.birth_date || null,
+    color: parsed.data.color || null,
+    weight: parsed.data.weight === "" ? null : parsed.data.weight,
+    photo_url: parsed.data.photo_url || null
+  };
+  const { owner_id: _ownerId, ...customerPayload } = payload;
+
   const { error } = await supabase
     .from("pets")
-    .update({
-      ...parsed.data,
-      breed: parsed.data.breed || null,
-      sex: parsed.data.sex || null,
-      birth_date: parsed.data.birth_date || null,
-      color: parsed.data.color || null,
-      weight: parsed.data.weight === "" ? null : parsed.data.weight,
-      photo_url: parsed.data.photo_url || null
-    })
+    .update(profile?.role === "admin" ? payload : customerPayload)
     .eq("id", id);
 
   if (error) return { ok: false, message: error.message };

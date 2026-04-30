@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { Plus, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ShieldCheck } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/layout/page-header";
 import { createClient } from "@/lib/supabase/server";
@@ -28,14 +27,10 @@ export default async function DashboardPage() {
     <>
       <PageHeader
         title={`Hola, ${profile?.full_name ?? "bienvenido"}`}
-        description="Resumen rápido de mascotas, perfiles NFC y actividad médica."
-        action={
-          <Button asChild>
-            <Link href="/pets/new">
-              <Plus size={16} />
-              Nueva mascota
-            </Link>
-          </Button>
+        description={
+          profile?.role === "admin"
+            ? "Resumen rápido de mascotas, perfiles NFC y actividad médica."
+            : "Aquí puedes administrar las mascotas asociadas a tus registros veterinarios Pinxel."
         }
       />
       <div className="grid gap-4 md:grid-cols-3">
@@ -58,7 +53,11 @@ export default async function DashboardPage() {
                 {pet.is_public_enabled ? <ShieldCheck className="text-primary" size={18} /> : null}
               </Link>
             ))}
-            {pets.length === 0 ? <p className="text-sm text-muted-foreground">Todavía no hay mascotas registradas.</p> : null}
+            {pets.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                Todavía no tienes mascotas asociadas. Pinxel las cargará según tus registros comprados.
+              </p>
+            ) : null}
           </CardContent>
         </Card>
         <Card>

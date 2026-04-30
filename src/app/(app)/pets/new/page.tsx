@@ -2,16 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/layout/page-header";
 import { PetForm } from "@/components/pets/pet-form";
 import { createClient } from "@/lib/supabase/server";
-import { getCurrentProfile } from "@/services/auth";
+import { requireRole } from "@/services/auth";
 import type { Profile } from "@/types";
 
 export default async function NewPetPage() {
-  const profile = await getCurrentProfile();
+  await requireRole("admin");
   const supabase = await createClient();
-  const { data } =
-    profile?.role === "admin"
-      ? await supabase.from("profiles").select("*").eq("role", "customer").order("full_name").returns<Profile[]>()
-      : { data: [] };
+  const { data } = await supabase.from("profiles").select("*").eq("role", "customer").order("full_name").returns<Profile[]>();
   const owners = data ?? [];
 
   return (

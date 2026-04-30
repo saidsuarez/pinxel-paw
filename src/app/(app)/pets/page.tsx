@@ -20,14 +20,20 @@ export default async function PetsPage() {
     <>
       <PageHeader
         title="Mascotas"
-        description="Administra perfiles, NFC y privacidad pública."
+        description={
+          profile?.role === "admin"
+            ? "Crea perfiles, asigna propietarios y administra URLs NFC."
+            : "Edita los perfiles asociados a tus registros veterinarios Pinxel."
+        }
         action={
-          <Button asChild>
-            <Link href="/pets/new">
-              <Plus size={16} />
-              Nueva mascota
-            </Link>
-          </Button>
+          profile?.role === "admin" ? (
+            <Button asChild>
+              <Link href="/pets/new">
+                <Plus size={16} />
+                Nueva mascota
+              </Link>
+            </Button>
+          ) : null
         }
       />
       <div className="overflow-hidden rounded-lg border bg-card">

@@ -75,6 +75,8 @@ https://paw.pinxel.co/p/bruna-8F3K2
 
 5. Customer logs in and updates pet data, records and public privacy.
 
+Customers cannot create or delete pets. Pinxel/admin controls how many pets a customer can manage by creating the purchased records first.
+
 ## Deployment
 
 Deploy to Vercel and add the same environment variables. Configure the production domain as:

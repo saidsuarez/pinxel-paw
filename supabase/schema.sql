@@ -159,9 +159,9 @@ using (
   or (nfc_enabled = true and is_public_enabled = true)
 );
 
-create policy "pets_insert_owner_or_admin"
+create policy "pets_insert_admin_only"
 on public.pets for insert
-with check (owner_id = auth.uid() or public.is_admin());
+with check (public.is_admin());
 
 create policy "pets_update_owner_or_admin"
 on public.pets for update
