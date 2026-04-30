@@ -99,7 +99,7 @@ export function PetForm({ pet, owners = [] }: { pet?: Pet; owners?: Profile[] })
           <Label htmlFor="owner_id">Propietario</Label>
           <select
             id="owner_id"
-            className="h-10 w-full rounded-md border border-input bg-white px-3 text-sm"
+            className="h-12 w-full rounded-full border border-input bg-white px-4 text-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/15"
             {...form.register("owner_id")}
           >
             <option value="">Seleccionar cliente</option>
@@ -125,13 +125,14 @@ export function PetForm({ pet, owners = [] }: { pet?: Pet; owners?: Profile[] })
           type="file"
           accept="image/*"
           disabled={isUploading}
+          className="rounded-2xl py-3"
           onChange={(event) => uploadPhoto(event.target.files?.[0])}
         />
         <input type="hidden" {...form.register("photo_url")} />
         {uploadMessage ? <p className="text-xs text-muted-foreground">{uploadMessage}</p> : null}
         {photoUrl ? (
-          <div className="flex items-center gap-3 rounded-md border bg-white p-3">
-            <Image src={photoUrl} alt="Foto de la mascota" width={64} height={64} className="h-16 w-16 rounded-md object-cover" />
+          <div className="flex items-center gap-3 rounded-2xl border bg-white p-3">
+            <Image src={photoUrl} alt="Foto de la mascota" width={64} height={64} className="h-16 w-16 rounded-xl object-cover" />
             <div className="min-w-0 text-sm">
               <p className="font-medium">Foto lista</p>
               <p className="truncate text-muted-foreground">{photoUrl}</p>

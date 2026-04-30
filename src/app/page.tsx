@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { HeartPulse, LockKeyhole, Nfc, PawPrint } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,14 +13,14 @@ const features = [
 export default function HomePage() {
   return (
     <main>
-      <section className="border-b bg-[linear-gradient(120deg,#f7f2e8_0%,#ffffff_54%,#fbe3dc_100%)]">
+      <section className="border-b bg-[linear-gradient(120deg,#ffffff_0%,#f7f7fa_62%,#fff7ea_100%)]">
         <div className="mx-auto grid min-h-[78vh] max-w-6xl items-center gap-10 px-4 py-16 md:grid-cols-[1.05fr_0.95fr]">
           <div>
-            <div className="mb-5 inline-flex items-center gap-2 rounded-md border bg-white px-3 py-2 text-sm text-muted-foreground shadow-sm">
-              <PawPrint size={16} />
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border bg-white px-4 py-2 text-sm font-bold text-muted-foreground shadow-sm">
+              <Image src="/pinxel-isotipo.svg" alt="" width={18} height={18} />
               paw.pinxel.co
             </div>
-            <h1 className="text-4xl font-semibold tracking-normal text-foreground sm:text-5xl">Paw Pinxel</h1>
+            <h1 className="text-5xl font-extrabold leading-tight tracking-normal text-foreground sm:text-6xl">Paw Pinxel</h1>
             <p className="mt-5 max-w-xl text-lg leading-8 text-muted-foreground">
               Registros veterinarios digitales para mascotas, conectados a stickers NFC y pensados para que cada familia tenga la información importante a mano.
             </p>
@@ -32,12 +33,12 @@ export default function HomePage() {
               </Button>
             </div>
           </div>
-          <div className="rounded-lg border bg-white p-4 shadow-sm">
-            <div className="aspect-[4/3] rounded-md bg-[radial-gradient(circle_at_28%_24%,#f8b95b_0_13%,transparent_14%),radial-gradient(circle_at_70%_38%,#15917f_0_16%,transparent_17%),linear-gradient(135deg,#ffffff,#f7efe2)] p-6">
+          <div className="rounded-3xl border bg-white p-4 shadow-sm">
+            <div className="aspect-[4/3] rounded-2xl bg-[radial-gradient(circle_at_28%_24%,#F59B1B_0_13%,transparent_14%),radial-gradient(circle_at_70%_38%,#4EBBB8_0_16%,transparent_17%),linear-gradient(135deg,#ffffff,#f7f7fa)] p-6">
               <div className="flex h-full flex-col justify-end">
-                <div className="rounded-lg border bg-white/90 p-5 shadow-sm backdrop-blur">
+                <div className="rounded-2xl border bg-white/90 p-6 shadow-sm backdrop-blur">
                   <p className="text-sm text-muted-foreground">Perfil NFC</p>
-                  <h2 className="mt-1 text-2xl font-semibold">Bruna</h2>
+                  <h2 className="mt-1 text-2xl font-extrabold">Bruna</h2>
                   <p className="mt-2 text-sm text-muted-foreground">Golden Retriever · Vacunas al día · Contacto de emergencia disponible</p>
                 </div>
               </div>

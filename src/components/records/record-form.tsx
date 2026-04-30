@@ -41,7 +41,7 @@ export function RecordForm({ petId }: { petId: string }) {
     <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 md:grid-cols-2">
       <div className="space-y-2">
         <Label htmlFor="record_type">Tipo</Label>
-        <select id="record_type" className="h-10 w-full rounded-md border border-input bg-white px-3 text-sm" {...form.register("record_type")}>
+        <select id="record_type" className="h-12 w-full rounded-full border border-input bg-white px-4 text-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/15" {...form.register("record_type")}>
           <option value="vacuna">Vacuna</option>
           <option value="alergia">Alergia</option>
           <option value="consulta">Consulta</option>

@@ -9,3 +9,5 @@ out
 *.log
 *.tsbuildinfo
 .DS_Store
+
+design-system/
