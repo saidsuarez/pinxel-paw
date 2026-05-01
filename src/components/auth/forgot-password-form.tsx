@@ -25,7 +25,7 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <form method="post" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="email">Correo</Label>
         <Input id="email" type="email" {...form.register("email")} />

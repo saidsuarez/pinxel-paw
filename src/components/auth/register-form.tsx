@@ -28,7 +28,7 @@ export function RegisterForm() {
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <form method="post" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="fullName">Nombre completo</Label>
         <Input id="fullName" {...form.register("fullName")} />
@@ -43,7 +43,7 @@ export function RegisterForm() {
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">Contraseña</Label>
-        <Input id="password" type="password" {...form.register("password")} />
+        <Input id="password" type="password" autoComplete="new-password" spellCheck={false} {...form.register("password")} />
       </div>
       {Object.values(form.formState.errors).map((error, index) => (
         <p key={index} className="text-xs text-destructive">

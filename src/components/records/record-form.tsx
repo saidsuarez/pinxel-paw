@@ -38,7 +38,7 @@ export function RecordForm({ petId }: { petId: string }) {
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 md:grid-cols-2">
+    <form method="post" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 md:grid-cols-2">
       <div className="space-y-2">
         <Label htmlFor="record_type">Tipo</Label>
         <select id="record_type" className="h-12 w-full rounded-full border border-input bg-white px-4 text-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/15" {...form.register("record_type")}>

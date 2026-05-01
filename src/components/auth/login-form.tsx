@@ -26,7 +26,7 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <form method="post" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="email">Correo</Label>
         <Input id="email" type="email" autoComplete="email" {...form.register("email")} />
@@ -34,7 +34,7 @@ export function LoginForm() {
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">Contraseña</Label>
-        <Input id="password" type="password" autoComplete="current-password" {...form.register("password")} />
+        <Input id="password" type="password" autoComplete="current-password" spellCheck={false} {...form.register("password")} />
         <p className="text-xs text-destructive">{form.formState.errors.password?.message}</p>
       </div>
       {message ? <p className="text-sm text-destructive">{message}</p> : null}

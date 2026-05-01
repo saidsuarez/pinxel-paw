@@ -93,7 +93,7 @@ export function PetForm({ pet, owners = [] }: { pet?: Pet; owners?: Profile[] })
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 md:grid-cols-2">
+    <form method="post" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 md:grid-cols-2">
       {owners.length > 0 ? (
         <div className="space-y-2 md:col-span-2">
           <Label htmlFor="owner_id">Propietario</Label>

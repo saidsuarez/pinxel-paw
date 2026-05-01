@@ -29,7 +29,7 @@ export function AdminUserForm() {
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 md:grid-cols-2">
+    <form method="post" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 md:grid-cols-2">
       <div className="space-y-2">
         <Label htmlFor="fullName">Nombre</Label>
         <Input id="fullName" {...form.register("fullName")} />
@@ -44,7 +44,7 @@ export function AdminUserForm() {
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">Contraseña temporal</Label>
-        <Input id="password" type="password" {...form.register("password")} />
+        <Input id="password" type="password" autoComplete="new-password" spellCheck={false} {...form.register("password")} />
       </div>
       {message ? <p className="text-sm text-muted-foreground md:col-span-2">{message}</p> : null}
       <div className="md:col-span-2">
