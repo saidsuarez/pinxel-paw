@@ -27,7 +27,7 @@ export default async function RecordsPage({ params }: { params: Promise<{ id: st
     <>
       <PageHeader
         title={`Registros de ${pet.name}`}
-        description="Historial privado. La vista NFC solo muestra resúmenes permitidos."
+        description="Historial privado. El perfil público solo muestra resúmenes permitidos."
         action={<Button asChild><Link href={`/pets/${id}/records/new`}><Plus size={16} />Nuevo registro</Link></Button>}
       />
       <div className="space-y-3">

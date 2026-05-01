@@ -21,7 +21,7 @@ export default async function EditPetPage({ params }: { params: Promise<{ id: st
 
   return (
     <>
-      <PageHeader title={`Editar ${pet.name}`} description="Actualiza datos privados y visibilidad del perfil NFC." />
+      <PageHeader title={`Editar ${pet.name}`} description="Actualiza datos privados y visibilidad del perfil público." />
       <Card>
         <CardHeader>
           <CardTitle>Datos de la mascota</CardTitle>

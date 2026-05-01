@@ -13,7 +13,7 @@ export default async function NewPetPage() {
 
   return (
     <>
-      <PageHeader title="Nueva mascota" description="Crea el perfil privado y genera su token público NFC." />
+      <PageHeader title="Nueva mascota" description="Crea el perfil privado y genera su enlace público." />
       <Card>
         <CardHeader>
           <CardTitle>Datos de la mascota</CardTitle>

@@ -29,13 +29,13 @@ export default async function DashboardPage() {
         title={`Hola, ${profile?.full_name ?? "bienvenido"}`}
         description={
           profile?.role === "admin"
-            ? "Resumen rápido de mascotas, perfiles NFC y actividad médica."
+            ? "Resumen rápido de mascotas, perfiles públicos y actividad médica."
             : "Aquí puedes administrar las mascotas asociadas a tus registros veterinarios Pinxel."
         }
       />
       <div className="grid gap-4 md:grid-cols-3">
         <Stat title="Mascotas" value={pets.length} />
-        <Stat title="NFC activos" value={pets.filter((pet) => pet.nfc_enabled).length} />
+        <Stat title="Perfiles activos" value={pets.filter((pet) => pet.nfc_enabled).length} />
         <Stat title="Públicos" value={pets.filter((pet) => pet.is_public_enabled).length} />
       </div>
       <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_0.75fr]">

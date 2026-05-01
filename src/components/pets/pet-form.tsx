@@ -151,7 +151,7 @@ export function PetForm({
       {canManageProtectedFields ? (
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" {...form.register("nfc_enabled")} />
-          NFC activo
+          Perfil activo
         </label>
       ) : null}
       <label className="flex items-center gap-2 text-sm">

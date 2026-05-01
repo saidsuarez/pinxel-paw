@@ -20,5 +20,5 @@ where email = 'tienda@pinxel.co';
 
 - Customers can only read and update their own pets and records.
 - Admin users can read and update operational data through RLS.
-- Public NFC pages only expose enabled pets plus safe public record types: `vacuna` and `alergia`.
+- Public profile pages only expose enabled pets plus safe public record types: `vacuna` and `alergia`.
 - `SUPABASE_SERVICE_ROLE_KEY` is only used in server actions for admin user creation. Never prefix it with `NEXT_PUBLIC_`.

@@ -30,7 +30,7 @@ export default async function PetDetailPage({ params }: { params: Promise<{ id: 
         description={`${pet.species}${pet.breed ? ` · ${pet.breed}` : ""}`}
         action={
           <div className="flex flex-wrap gap-2">
-            <Button asChild variant="outline"><Link href={`/p/${pet.public_token}`}><ExternalLink size={16} />Ver NFC</Link></Button>
+            <Button asChild variant="outline"><Link href={`/p/${pet.public_token}`}><ExternalLink size={16} />Ver perfil público</Link></Button>
             <Button asChild variant="outline"><Link href={`/pets/${pet.id}/edit`}><Pencil size={16} />Editar</Link></Button>
             <Button asChild><Link href={`/pets/${pet.id}/records/new`}><Plus size={16} />Registro</Link></Button>
           </div>
@@ -47,7 +47,7 @@ export default async function PetDetailPage({ params }: { params: Promise<{ id: 
             <Info label="Color" value={pet.color ?? "Sin dato"} />
             <Info label="Peso" value={pet.weight ? `${pet.weight} kg` : "Sin dato"} />
             <div className="sm:col-span-2">
-              <p className="text-muted-foreground">URL pública NFC</p>
+              <p className="text-muted-foreground">URL del perfil público</p>
               <p className="break-all font-medium">{publicUrl}</p>
             </div>
             <Badge>{pet.is_public_enabled ? "Perfil público activo" : "Perfil público desactivado"}</Badge>

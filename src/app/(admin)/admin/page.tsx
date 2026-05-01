@@ -14,7 +14,7 @@ export default async function AdminPage() {
 
   return (
     <>
-      <PageHeader title="Panel admin" description="Operación manual para el MVP: clientes, mascotas, registros y URLs NFC." />
+      <PageHeader title="Panel admin" description="Operación manual para el MVP: clientes, mascotas, registros y perfiles públicos." />
       <div className="grid gap-4 md:grid-cols-3">
         <Stat title="Usuarios" value={users ?? 0} href="/admin/users" />
         <Stat title="Mascotas" value={pets ?? 0} href="/admin/pets" />

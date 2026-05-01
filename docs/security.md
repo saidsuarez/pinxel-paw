@@ -20,9 +20,9 @@ The first setup flow exposed temporary credentials in chat/context. Rotate these
 
 - Sensitive forms use POST semantics so form values are not encoded into the browser URL.
 - Auth errors shown to users are generic to avoid leaking internal provider details or confirming whether an email exists.
-- Public NFC pages read through `get_public_pet_profile(token)`, a sanitized RPC that only returns public fields allowed by the pet privacy settings.
+- Public profile pages read through `get_public_pet_profile(token)`, a sanitized RPC that only returns public fields allowed by the pet privacy settings.
 - Base tables for pets, owner profiles, records, and profile settings are not publicly selectable through RLS.
-- Customer pet updates cannot change protected fields like owner, NFC token, NFC enabled state, or creation timestamp.
+- Customer pet updates cannot change protected fields like owner, public token, profile enabled state, or creation timestamp.
 - Pet photo uploads are restricted to the authenticated user's own Storage folder.
 
 ## Remaining follow-up

@@ -22,7 +22,7 @@ export default async function PetsPage() {
         title="Mascotas"
         description={
           profile?.role === "admin"
-            ? "Crea perfiles, asigna propietarios y administra URLs NFC."
+            ? "Crea perfiles, asigna propietarios y administra URLs de perfil público."
             : "Edita los perfiles asociados a tus registros veterinarios Pinxel."
         }
         action={
@@ -42,7 +42,7 @@ export default async function PetsPage() {
             <TableRow>
               <TableHead>Nombre</TableHead>
               <TableHead>Especie</TableHead>
-              <TableHead>NFC</TableHead>
+              <TableHead>Perfil</TableHead>
               <TableHead>Público</TableHead>
             </TableRow>
           </TableHeader>

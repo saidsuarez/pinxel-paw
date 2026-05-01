@@ -13,7 +13,7 @@ export default async function AdminPetsPage() {
 
   return (
     <>
-      <PageHeader title="Mascotas admin" description="Vista global para editar mascotas y copiar URLs NFC." action={<Button asChild><Link href="/pets/new">Nueva mascota</Link></Button>} />
+      <PageHeader title="Mascotas admin" description="Vista global para editar mascotas y copiar URLs de perfil público." action={<Button asChild><Link href="/pets/new">Nueva mascota</Link></Button>} />
       <div className="overflow-hidden rounded-lg border bg-card">
         <Table>
           <TableHeader>
@@ -32,7 +32,7 @@ export default async function AdminPetsPage() {
                   <p className="text-sm text-muted-foreground">{pet.species}</p>
                 </TableCell>
                 <TableCell className="break-all">{pet.public_token}</TableCell>
-                <TableCell><Badge>{pet.nfc_enabled ? "NFC activo" : "NFC inactivo"}</Badge></TableCell>
+                <TableCell><Badge>{pet.nfc_enabled ? "Perfil activo" : "Perfil inactivo"}</Badge></TableCell>
                 <TableCell><Button asChild variant="outline" size="sm"><Link href={`/pets/${pet.id}`}>Abrir</Link></Button></TableCell>
               </TableRow>
             ))}
