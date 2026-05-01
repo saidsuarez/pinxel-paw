@@ -50,7 +50,9 @@ export default async function PetDetailPage({ params }: { params: Promise<{ id: 
               <p className="text-muted-foreground">URL del perfil público</p>
               <p className="break-all font-medium">{publicUrl}</p>
             </div>
-            <Badge>{pet.is_public_enabled ? "Perfil público activo" : "Perfil público desactivado"}</Badge>
+            <Badge variant={pet.is_public_enabled ? "info" : "neutral"}>
+              {pet.is_public_enabled ? "Perfil público activo" : "Perfil público desactivado"}
+            </Badge>
           </CardContent>
         </Card>
         <Card>

@@ -32,7 +32,7 @@ export default async function AdminPetsPage() {
                   <p className="text-sm text-muted-foreground">{pet.species}</p>
                 </TableCell>
                 <TableCell className="break-all">{pet.public_token}</TableCell>
-                <TableCell><Badge>{pet.nfc_enabled ? "Perfil activo" : "Perfil inactivo"}</Badge></TableCell>
+                <TableCell><Badge variant={pet.nfc_enabled ? "success" : "neutral"}>{pet.nfc_enabled ? "Perfil activo" : "Perfil inactivo"}</Badge></TableCell>
                 <TableCell><Button asChild variant="outline" size="sm"><Link href={`/pets/${pet.id}`}>Abrir</Link></Button></TableCell>
               </TableRow>
             ))}

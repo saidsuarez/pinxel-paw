@@ -55,8 +55,8 @@ export default async function PetsPage() {
                   </Link>
                 </TableCell>
                 <TableCell>{pet.species}</TableCell>
-                <TableCell><Badge>{pet.nfc_enabled ? "Activo" : "Inactivo"}</Badge></TableCell>
-                <TableCell><Badge>{pet.is_public_enabled ? "Visible" : "Privado"}</Badge></TableCell>
+                <TableCell><Badge variant={pet.nfc_enabled ? "success" : "neutral"}>{pet.nfc_enabled ? "Activo" : "Inactivo"}</Badge></TableCell>
+                <TableCell><Badge variant={pet.is_public_enabled ? "info" : "neutral"}>{pet.is_public_enabled ? "Visible" : "Privado"}</Badge></TableCell>
               </TableRow>
             ))}
           </TableBody>

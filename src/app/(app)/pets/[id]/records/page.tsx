@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { PageHeader } from "@/components/layout/page-header";
 import { createClient } from "@/lib/supabase/server";
@@ -36,7 +36,7 @@ export default async function RecordsPage({ params }: { params: Promise<{ id: st
             <CardContent className="p-5">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <Badge>{record.record_type}</Badge>
+                  <Badge variant={recordBadgeVariant(record.record_type)}>{record.record_type}</Badge>
                   <h2 className="mt-2 text-lg font-semibold">{record.title}</h2>
                   <p className="mt-1 text-sm text-muted-foreground">{record.description ?? "Sin descripción"}</p>
                 </div>
@@ -49,4 +49,10 @@ export default async function RecordsPage({ params }: { params: Promise<{ id: st
       </div>
     </>
   );
+}
+
+function recordBadgeVariant(recordType: string): BadgeVariant {
+  if (recordType === "vacuna") return "success";
+  if (recordType === "alergia") return "warning";
+  return "info";
 }

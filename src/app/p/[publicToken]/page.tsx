@@ -68,7 +68,7 @@ export default async function PublicPetPage({ params }: { params: Promise<{ publ
               )}
             </div>
             <div className="p-6">
-              <Badge className="bg-primary/10 text-primary">Perfil público verificado</Badge>
+              <Badge variant="info">Perfil público verificado</Badge>
               <h1 className="mt-4 text-3xl font-semibold">{pet.name}</h1>
               <p className="mt-2 text-muted-foreground">{pet.species}{pet.breed ? ` · ${pet.breed}` : ""}</p>
               <div className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
