@@ -5,14 +5,19 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function createPublicToken(name: string) {
-  const slug = name
+export function normalizePublicToken(value: string) {
+  return value
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
+    .replace(/-+/g, "-")
     .replace(/^-|-$/g, "")
     .slice(0, 36);
+}
+
+export function createPublicToken(name: string) {
+  const slug = normalizePublicToken(name);
   const suffix = crypto.randomUUID().slice(0, 5).toUpperCase();
   return `${slug || "mascota"}-${suffix}`;
 }

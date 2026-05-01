@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createPublicToken } from "@/lib/utils";
+import { createPublicToken, normalizePublicToken } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile, requireUser } from "@/services/auth";
 import { petSchema, publicSettingsSchema } from "@/validations/pets";
@@ -21,7 +21,7 @@ export async function createPet(values: unknown) {
   }
 
   const supabase = await createClient();
-  const token = createPublicToken(parsed.data.name);
+  const token = parsed.data.public_token ? normalizePublicToken(parsed.data.public_token) : createPublicToken(parsed.data.name);
 
   const { data, error } = await supabase
     .from("pets")
@@ -39,6 +39,7 @@ export async function createPet(values: unknown) {
     .select("id")
     .single();
 
+  if (error?.code === "23505") return { ok: false, message: "Ese enlace público ya está en uso." };
   if (error) return { ok: false, message: "No pudimos crear la mascota. Revisa los datos e intenta de nuevo." };
 
   await supabase.from("public_profile_settings").insert({ pet_id: data.id });
@@ -60,18 +61,47 @@ export async function updatePet(id: string, values: unknown) {
     birth_date: parsed.data.birth_date || null,
     color: parsed.data.color || null,
     weight: parsed.data.weight === "" ? null : parsed.data.weight,
-    photo_url: parsed.data.photo_url || null
+    photo_url: parsed.data.photo_url || null,
+    public_token: parsed.data.public_token ? normalizePublicToken(parsed.data.public_token) : undefined
   };
-  const { owner_id: _ownerId, nfc_enabled: _nfcEnabled, ...customerPayload } = payload;
+  const { owner_id: _ownerId, nfc_enabled: _nfcEnabled, public_token: _publicToken, ...customerPayload } = payload;
 
   const { error } = await supabase
     .from("pets")
     .update(profile?.role === "admin" ? payload : customerPayload)
     .eq("id", id);
 
+  if (error?.code === "23505") return { ok: false, message: "Ese enlace público ya está en uso." };
   if (error) return { ok: false, message: "No pudimos guardar los cambios. Revisa los datos e intenta de nuevo." };
   revalidatePath(`/pets/${id}`);
   redirect(`/pets/${id}`);
+}
+
+export async function checkPublicTokenAvailability(token: string, currentPetId?: string) {
+  const profile = await getCurrentProfile();
+  if (profile?.role !== "admin") {
+    return { ok: false, message: "Solo el administrador puede validar enlaces." };
+  }
+
+  const normalizedToken = normalizePublicToken(token);
+  if (normalizedToken.length < 3) {
+    return { ok: false, available: false, token: normalizedToken, message: "El enlace debe tener al menos 3 caracteres." };
+  }
+
+  const supabase = await createClient();
+  let query = supabase.from("pets").select("id").eq("public_token", normalizedToken).limit(1);
+  if (currentPetId) query = query.neq("id", currentPetId);
+  const { data, error } = await query;
+
+  if (error) return { ok: false, available: false, token: normalizedToken, message: "No pudimos validar el enlace." };
+  const available = (data ?? []).length === 0;
+
+  return {
+    ok: true,
+    available,
+    token: normalizedToken,
+    message: available ? "Enlace disponible." : "Ese enlace público ya está en uso."
+  };
 }
 
 export async function updatePublicSettings(petId: string, values: unknown) {

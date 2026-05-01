@@ -9,8 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
+import { normalizePublicToken } from "@/lib/utils";
 import type { Pet, Profile } from "@/types";
-import { createPet, updatePet } from "@/services/actions/pets";
+import { checkPublicTokenAvailability, createPet, updatePet } from "@/services/actions/pets";
 import { petSchema } from "@/validations/pets";
 
 type FormValues = z.infer<typeof petSchema>;
@@ -26,6 +27,8 @@ export function PetForm({
   canManageProtectedFields?: boolean;
 }) {
   const [message, setMessage] = useState<string>();
+  const [tokenMessage, setTokenMessage] = useState<string>();
+  const [isCheckingToken, setIsCheckingToken] = useState(false);
   const [uploadMessage, setUploadMessage] = useState<string>();
   const [isUploading, setIsUploading] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -41,17 +44,35 @@ export function PetForm({
       color: pet?.color ?? "",
       weight: pet?.weight ?? "",
       photo_url: pet?.photo_url ?? "",
+      public_token: pet?.public_token ?? "",
       nfc_enabled: pet?.nfc_enabled ?? true,
       is_public_enabled: pet?.is_public_enabled ?? true
     }
   });
   const photoUrl = form.watch("photo_url");
+  const publicTokenRegister = form.register("public_token", {
+    setValueAs: (value) => normalizePublicToken(value ?? "")
+  });
 
   function onSubmit(values: FormValues) {
     startTransition(async () => {
       const result = pet ? await updatePet(pet.id, values) : await createPet(values);
       setMessage(result?.message);
     });
+  }
+
+  async function checkToken() {
+    const token = normalizePublicToken(form.getValues("public_token") ?? "");
+    form.setValue("public_token", token, { shouldDirty: true, shouldValidate: true });
+    if (!token) {
+      setTokenMessage(pet ? "Si lo dejas vacío, se conservará el enlace actual." : "Si lo dejas vacío, se generará automáticamente.");
+      return;
+    }
+
+    setIsCheckingToken(true);
+    const result = await checkPublicTokenAvailability(token, pet?.id);
+    setTokenMessage(result.message);
+    setIsCheckingToken(false);
   }
 
   async function uploadPhoto(file?: File) {
@@ -126,6 +147,26 @@ export function PetForm({
       <Field label="Fecha de nacimiento" id="birth_date" type="date" register={form.register("birth_date")} />
       <Field label="Color" id="color" register={form.register("color")} />
       <Field label="Peso kg" id="weight" type="number" step="0.1" register={form.register("weight")} />
+      {canManageProtectedFields ? (
+        <div className="space-y-2 md:col-span-2">
+          <Label htmlFor="public_token">Enlace público</Label>
+          <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
+            <Input
+              id="public_token"
+              placeholder="bruna-golden"
+              {...publicTokenRegister}
+              onBlur={checkToken}
+            />
+            <Button type="button" variant="outline" disabled={isCheckingToken} onClick={checkToken}>
+              {isCheckingToken ? "Validando" : "Verificar"}
+            </Button>
+          </div>
+          {form.formState.errors.public_token?.message ? (
+            <p className="text-xs text-destructive">{form.formState.errors.public_token.message}</p>
+          ) : null}
+          {tokenMessage ? <p className="text-xs text-muted-foreground">{tokenMessage}</p> : null}
+        </div>
+      ) : null}
       <div className="space-y-2 md:col-span-2">
         <Label htmlFor="photo">Foto de la mascota</Label>
         <Input
