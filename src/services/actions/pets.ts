@@ -39,7 +39,7 @@ export async function createPet(values: unknown) {
     .select("id")
     .single();
 
-  if (error) return { ok: false, message: error.message };
+  if (error) return { ok: false, message: "No pudimos crear la mascota. Revisa los datos e intenta de nuevo." };
 
   await supabase.from("public_profile_settings").insert({ pet_id: data.id });
   revalidatePath("/pets");
@@ -62,14 +62,14 @@ export async function updatePet(id: string, values: unknown) {
     weight: parsed.data.weight === "" ? null : parsed.data.weight,
     photo_url: parsed.data.photo_url || null
   };
-  const { owner_id: _ownerId, ...customerPayload } = payload;
+  const { owner_id: _ownerId, nfc_enabled: _nfcEnabled, ...customerPayload } = payload;
 
   const { error } = await supabase
     .from("pets")
     .update(profile?.role === "admin" ? payload : customerPayload)
     .eq("id", id);
 
-  if (error) return { ok: false, message: error.message };
+  if (error) return { ok: false, message: "No pudimos guardar los cambios. Revisa los datos e intenta de nuevo." };
   revalidatePath(`/pets/${id}`);
   redirect(`/pets/${id}`);
 }
@@ -84,7 +84,7 @@ export async function updatePublicSettings(petId: string, values: unknown) {
     .from("public_profile_settings")
     .upsert({ pet_id: petId, ...parsed.data }, { onConflict: "pet_id" });
 
-  if (error) return { ok: false, message: error.message };
+  if (error) return { ok: false, message: "No pudimos actualizar la privacidad. Intenta de nuevo." };
   revalidatePath(`/pets/${petId}`);
   return { ok: true, message: "Privacidad actualizada." };
 }

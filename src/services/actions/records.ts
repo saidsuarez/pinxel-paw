@@ -22,7 +22,7 @@ export async function createVeterinaryRecord(petId: string, values: unknown) {
     attachment_url: parsed.data.attachment_url || null
   });
 
-  if (error) return { ok: false, message: error.message };
+  if (error) return { ok: false, message: "No pudimos crear el registro. Revisa los datos e intenta de nuevo." };
   revalidatePath(`/pets/${petId}`);
   redirect(`/pets/${petId}/records`);
 }

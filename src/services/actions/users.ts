@@ -22,7 +22,7 @@ export async function createCustomer(values: unknown) {
     }
   });
 
-  if (error) return { ok: false, message: error.message };
+  if (error) return { ok: false, message: "No pudimos crear el usuario. Revisa los datos e intenta de nuevo." };
   revalidatePath("/admin/users");
   return { ok: true, message: "Usuario creado." };
 }

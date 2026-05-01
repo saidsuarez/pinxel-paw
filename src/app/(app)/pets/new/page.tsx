@@ -19,7 +19,7 @@ export default async function NewPetPage() {
           <CardTitle>Datos de la mascota</CardTitle>
         </CardHeader>
         <CardContent>
-          <PetForm owners={owners} />
+          <PetForm owners={owners} canManageProtectedFields />
         </CardContent>
       </Card>
     </>

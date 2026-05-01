@@ -27,7 +27,7 @@ export default async function EditPetPage({ params }: { params: Promise<{ id: st
           <CardTitle>Datos de la mascota</CardTitle>
         </CardHeader>
         <CardContent>
-          <PetForm pet={pet} owners={owners} />
+          <PetForm pet={pet} owners={owners} canManageProtectedFields={profile?.role === "admin"} />
         </CardContent>
       </Card>
     </>

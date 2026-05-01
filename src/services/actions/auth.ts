@@ -15,7 +15,7 @@ export async function login(values: unknown): Promise<ActionState> {
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword(parsed.data);
-  if (error) return { ok: false, message: error.message };
+  if (error) return { ok: false, message: "No pudimos iniciar sesión. Revisa tus credenciales." };
 
   redirect("/dashboard");
 }
@@ -37,7 +37,7 @@ export async function signup(values: unknown): Promise<ActionState> {
     }
   });
 
-  if (error) return { ok: false, message: error.message };
+  if (error) return { ok: false, message: "No pudimos crear la cuenta. Revisa los datos e intenta de nuevo." };
   return { ok: true, message: "Cuenta creada. Revisa tu correo si Supabase requiere confirmación." };
 }
 
@@ -51,8 +51,8 @@ export async function requestPasswordReset(values: unknown): Promise<ActionState
     redirectTo: `${appUrl}/login`
   });
 
-  if (error) return { ok: false, message: error.message };
-  return { ok: true, message: "Te enviamos las instrucciones de recuperación." };
+  if (error) return { ok: true, message: "Si el correo existe, enviaremos instrucciones de recuperación." };
+  return { ok: true, message: "Si el correo existe, enviaremos instrucciones de recuperación." };
 }
 
 export async function logout() {

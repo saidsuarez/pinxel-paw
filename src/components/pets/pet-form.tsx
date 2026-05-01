@@ -16,7 +16,15 @@ import { petSchema } from "@/validations/pets";
 type FormValues = z.infer<typeof petSchema>;
 const maxPhotoSize = 5 * 1024 * 1024;
 
-export function PetForm({ pet, owners = [] }: { pet?: Pet; owners?: Profile[] }) {
+export function PetForm({
+  pet,
+  owners = [],
+  canManageProtectedFields = false
+}: {
+  pet?: Pet;
+  owners?: Profile[];
+  canManageProtectedFields?: boolean;
+}) {
   const [message, setMessage] = useState<string>();
   const [uploadMessage, setUploadMessage] = useState<string>();
   const [isUploading, setIsUploading] = useState(false);
@@ -81,7 +89,7 @@ export function PetForm({ pet, owners = [] }: { pet?: Pet; owners?: Profile[] })
     });
 
     if (error) {
-      setUploadMessage(error.message);
+      setUploadMessage("No pudimos subir la foto. Intenta de nuevo.");
       setIsUploading(false);
       return;
     }
@@ -140,10 +148,12 @@ export function PetForm({ pet, owners = [] }: { pet?: Pet; owners?: Profile[] })
           </div>
         ) : null}
       </div>
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" {...form.register("nfc_enabled")} />
-        NFC activo
-      </label>
+      {canManageProtectedFields ? (
+        <label className="flex items-center gap-2 text-sm">
+          <input type="checkbox" {...form.register("nfc_enabled")} />
+          NFC activo
+        </label>
+      ) : null}
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" {...form.register("is_public_enabled")} />
         Perfil público activo
