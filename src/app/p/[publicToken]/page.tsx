@@ -85,7 +85,7 @@ export default async function PublicPetPage({ params }: { params: Promise<{ publ
             </div>
             <div className="p-6">
               <Badge className="bg-[var(--profile-badge-bg)] text-[var(--profile-badge-text)]">Perfil público verificado</Badge>
-              <h1 className="mt-4 text-3xl font-semibold">{pet.name}</h1>
+              <h1 className="mt-4 text-3xl font-semibold text-[var(--profile-text)]">{pet.name}</h1>
               <p className="mt-2 text-[var(--profile-muted)]">{pet.species}{pet.breed ? ` · ${pet.breed}` : ""}</p>
               <div className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
                 <Info label="Color" value={pet.color ?? "Sin dato"} />
@@ -100,7 +100,7 @@ export default async function PublicPetPage({ params }: { params: Promise<{ publ
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           {settings.show_owner_phone && owner?.phone ? (
             <Card className="border-[var(--profile-border)] bg-[var(--profile-surface)] text-[var(--profile-text)]">
-              <CardHeader><CardTitle className="flex items-center gap-2"><Phone size={18} />Contacto</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="flex items-center gap-2 text-[var(--profile-text)] [&_svg]:text-[var(--profile-primary)]"><Phone size={18} />Contacto</CardTitle></CardHeader>
               <CardContent>
                 {settings.show_owner_name ? <p className="font-medium">{owner.full_name}</p> : null}
                 <a className="text-[var(--profile-primary)] hover:underline" href={`tel:${owner.phone}`}>{owner.phone}</a>
@@ -109,7 +109,7 @@ export default async function PublicPetPage({ params }: { params: Promise<{ publ
           ) : null}
           {settings.show_allergies !== false ? (
             <Card className="border-[var(--profile-border)] bg-[var(--profile-surface)] text-[var(--profile-text)]">
-              <CardHeader><CardTitle className="flex items-center gap-2"><AlertTriangle size={18} />Alergias importantes</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="flex items-center gap-2 text-[var(--profile-text)] [&_svg]:text-[var(--profile-primary)]"><AlertTriangle size={18} />Alergias importantes</CardTitle></CardHeader>
               <CardContent className="space-y-2 text-sm text-[var(--profile-muted)]">
                 {allergies.map((record) => <p key={record.id}>{record.title}</p>)}
                 {allergies.length === 0 ? <p>No hay alergias públicas registradas.</p> : null}
@@ -118,7 +118,7 @@ export default async function PublicPetPage({ params }: { params: Promise<{ publ
           ) : null}
           {settings.show_vaccination_status !== false ? (
             <Card className="border-[var(--profile-border)] bg-[var(--profile-surface)] text-[var(--profile-text)] md:col-span-2">
-              <CardHeader><CardTitle className="flex items-center gap-2"><ShieldCheck size={18} />Vacunación</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="flex items-center gap-2 text-[var(--profile-text)] [&_svg]:text-[var(--profile-primary)]"><ShieldCheck size={18} />Vacunación</CardTitle></CardHeader>
               <CardContent className="grid gap-3 sm:grid-cols-2">
                 {vaccinations.map((record) => (
                   <div key={record.id} className="rounded-md border border-[var(--profile-border)] bg-[var(--profile-surface-muted)] p-3">
@@ -132,7 +132,7 @@ export default async function PublicPetPage({ params }: { params: Promise<{ publ
           ) : null}
         </div>
         <p className="mt-6 flex items-center justify-center gap-2 text-center text-sm text-[var(--profile-muted)]">
-          <HeartPulse size={16} />
+          <HeartPulse size={16} className="text-[var(--profile-primary)]" />
           Información pública limitada por privacidad.
         </p>
       </div>
