@@ -151,21 +151,47 @@ export function PetForm({
       <Field label="Peso kg" id="weight" type="number" step="0.1" register={form.register("weight")} />
       <div className="space-y-3 md:col-span-2">
         <Label>Theme del perfil público</Label>
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {petProfileThemeIds.map((themeId) => {
             const theme = petProfileThemes[themeId];
 
             return (
               <label
                 key={theme.id}
-                className="flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl border bg-white px-3 py-2 text-sm transition-colors hover:border-primary"
+                className="group relative min-h-[132px] cursor-pointer overflow-hidden rounded-2xl border p-3 text-sm shadow-sm ring-offset-2 transition hover:-translate-y-0.5 hover:shadow-md has-[:checked]:ring-2 has-[:checked]:ring-primary"
+                style={{
+                  background: theme.background,
+                  borderColor: theme.border,
+                  color: theme.text
+                }}
               >
                 <input type="radio" value={theme.id} className="sr-only peer" {...form.register("profile_theme")} />
+                <span className="mb-3 flex items-center justify-between gap-2">
+                  <span className="font-bold">{theme.label}</span>
+                  <span
+                    className="h-6 w-6 rounded-full border border-black/10 shadow-sm"
+                    style={{ background: theme.swatch }}
+                  />
+                </span>
                 <span
-                  className="h-6 w-6 rounded-full border border-black/10 shadow-sm ring-offset-2 peer-checked:ring-2 peer-checked:ring-primary"
-                  style={{ background: theme.swatch }}
-                />
-                <span className="font-medium">{theme.label}</span>
+                  className="block rounded-xl border p-3"
+                  style={{
+                    background: theme.surface,
+                    borderColor: theme.border
+                  }}
+                >
+                  <span className="block font-semibold" style={{ color: theme.text }}>Nombre mascota</span>
+                  <span className="mt-1 block text-xs" style={{ color: theme.mutedText }}>Perfil público</span>
+                  <span
+                    className="mt-3 inline-flex rounded-full px-2.5 py-1 text-[11px] font-bold"
+                    style={{
+                      background: theme.badgeBackground,
+                      color: theme.badgeText
+                    }}
+                  >
+                    Verificado
+                  </span>
+                </span>
               </label>
             );
           })}
