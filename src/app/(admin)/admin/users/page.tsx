@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mail, PawPrint, Plus } from "lucide-react";
+import { Mail, PawPrint, Pencil, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -56,6 +56,9 @@ export default async function AdminUsersPage() {
                     <div className="flex justify-end gap-2">
                       <Button asChild variant="outline" size="icon" aria-label={`Enviar correo a ${user.email}`}>
                         <a href={`mailto:${user.email}`}><Mail size={16} /></a>
+                      </Button>
+                      <Button asChild variant="outline" size="icon" aria-label={`Editar ${user.full_name ?? user.email}`}>
+                        <Link href={`/admin/users/${user.user_id}/edit`}><Pencil size={16} /></Link>
                       </Button>
                       <Button asChild variant="outline" size="icon" aria-label={`Ver mascotas de ${user.full_name ?? user.email}`}>
                         <Link href={`/admin/pets?owner=${user.user_id}`}><PawPrint size={16} /></Link>
