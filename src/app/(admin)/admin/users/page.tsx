@@ -1,4 +1,8 @@
+import Link from "next/link";
+import { Mail, PawPrint } from "lucide-react";
 import { AdminUserForm } from "@/components/auth/admin-user-form";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PageHeader } from "@/components/layout/page-header";
@@ -33,6 +37,7 @@ export default async function AdminUsersPage() {
                   <TableHead>Nombre</TableHead>
                   <TableHead>Correo</TableHead>
                   <TableHead>Rol</TableHead>
+                  <TableHead className="text-right">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -40,7 +45,19 @@ export default async function AdminUsersPage() {
                   <TableRow key={user.id}>
                     <TableCell>{user.full_name ?? "Sin nombre"}</TableCell>
                     <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.role}</TableCell>
+                    <TableCell>
+                      <Badge variant={user.role === "admin" ? "info" : "neutral"}>{user.role}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex justify-end gap-2">
+                        <Button asChild variant="outline" size="icon" aria-label={`Enviar correo a ${user.email}`}>
+                          <a href={`mailto:${user.email}`}><Mail size={16} /></a>
+                        </Button>
+                        <Button asChild variant="outline" size="icon" aria-label={`Ver mascotas de ${user.full_name ?? user.email}`}>
+                          <Link href={`/admin/pets?owner=${user.user_id}`}><PawPrint size={16} /></Link>
+                        </Button>
+                      </div>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

@@ -1,4 +1,7 @@
+import Link from "next/link";
+import { ClipboardList, PawPrint } from "lucide-react";
 import { Badge, type BadgeVariant } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PageHeader } from "@/components/layout/page-header";
 import { createClient } from "@/lib/supabase/server";
@@ -26,7 +29,17 @@ export default async function AdminRecordsPage() {
                 <h2 className="mt-2 font-semibold">{record.title}</h2>
                 <p className="text-sm text-muted-foreground">{record.description ?? "Sin descripción"}</p>
               </div>
-              <p className="text-sm text-muted-foreground">{formatDate(record.date)}</p>
+              <div className="flex flex-col gap-2 sm:items-end">
+                <p className="text-sm text-muted-foreground">{formatDate(record.date)}</p>
+                <div className="flex gap-2">
+                  <Button asChild variant="outline" size="sm">
+                    <Link href={`/pets/${record.pet_id}`}><PawPrint size={16} />Mascota</Link>
+                  </Button>
+                  <Button asChild variant="outline" size="sm">
+                    <Link href={`/pets/${record.pet_id}/records`}><ClipboardList size={16} />Historial</Link>
+                  </Button>
+                </div>
+              </div>
             </CardContent>
           </Card>
         ))}

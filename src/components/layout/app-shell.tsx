@@ -1,25 +1,27 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck } from "lucide-react";
+import { ClipboardList, Home, LogOut, PawPrint, Settings, ShieldCheck, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { logout } from "@/services/actions/auth";
 import type { Profile } from "@/types";
 
 const customerLinks = [
-  { href: "/dashboard", label: "Inicio" },
-  { href: "/pets", label: "Mascotas" },
-  { href: "/settings", label: "Cuenta" }
+  { href: "/dashboard", label: "Inicio", icon: Home },
+  { href: "/pets", label: "Mascotas", icon: PawPrint },
+  { href: "/settings", label: "Cuenta", icon: Settings }
 ];
 
 const adminLinks = [
-  { href: "/admin", label: "Admin" },
-  { href: "/admin/users", label: "Usuarios" },
-  { href: "/admin/pets", label: "Mascotas" },
-  { href: "/admin/records", label: "Registros" }
+  { href: "/dashboard", label: "Inicio", icon: Home },
+  { href: "/admin", label: "Admin", icon: ShieldCheck },
+  { href: "/admin/users", label: "Usuarios", icon: Users },
+  { href: "/admin/pets", label: "Mascotas", icon: PawPrint },
+  { href: "/admin/records", label: "Registros", icon: ClipboardList },
+  { href: "/settings", label: "Cuenta", icon: Settings }
 ];
 
 export function AppShell({ profile, children }: { profile: Profile | null; children: React.ReactNode }) {
-  const links = profile?.role === "admin" ? [...customerLinks, ...adminLinks] : customerLinks;
+  const links = profile?.role === "admin" ? adminLinks : customerLinks;
 
   return (
     <div className="min-h-screen bg-muted/45">
@@ -33,18 +35,38 @@ export function AppShell({ profile, children }: { profile: Profile | null; child
             </span>
           </Link>
           <nav className="hidden items-center gap-1 md:flex">
-            {links.map((link) => (
+            {links.map((link) => {
+              const Icon = link.icon;
+              return (
               <Button key={link.href} asChild variant="ghost" size="sm">
-                <Link href={link.href}>{link.label}</Link>
+                <Link href={link.href}>
+                  <Icon size={16} />
+                  {link.label}
+                </Link>
               </Button>
-            ))}
+              );
+            })}
           </nav>
           <form action={logout}>
             <Button variant="outline" size="sm" type="submit">
+              <LogOut size={16} />
               Salir
             </Button>
           </form>
         </div>
+        <nav className="flex gap-1 overflow-x-auto border-t px-4 py-2 md:hidden">
+          {links.map((link) => {
+            const Icon = link.icon;
+            return (
+              <Button key={link.href} asChild variant="ghost" size="sm" className="shrink-0">
+                <Link href={link.href}>
+                  <Icon size={16} />
+                  {link.label}
+                </Link>
+              </Button>
+            );
+          })}
+        </nav>
       </header>
       <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
       {profile?.role === "admin" ? (

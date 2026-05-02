@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { ExternalLink, Eye, Pencil, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -44,6 +44,7 @@ export default async function PetsPage() {
               <TableHead>Especie</TableHead>
               <TableHead>Perfil</TableHead>
               <TableHead>Público</TableHead>
+              <TableHead className="text-right">Acciones</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -57,6 +58,19 @@ export default async function PetsPage() {
                 <TableCell>{pet.species}</TableCell>
                 <TableCell><Badge variant={pet.nfc_enabled ? "success" : "neutral"}>{pet.nfc_enabled ? "Activo" : "Inactivo"}</Badge></TableCell>
                 <TableCell><Badge variant={pet.is_public_enabled ? "info" : "neutral"}>{pet.is_public_enabled ? "Visible" : "Privado"}</Badge></TableCell>
+                <TableCell>
+                  <div className="flex justify-end gap-2">
+                    <Button asChild variant="outline" size="icon" aria-label={`Ver ${pet.name}`}>
+                      <Link href={`/pets/${pet.id}`}><Eye size={16} /></Link>
+                    </Button>
+                    <Button asChild variant="outline" size="icon" aria-label={`Editar ${pet.name}`}>
+                      <Link href={`/pets/${pet.id}/edit`}><Pencil size={16} /></Link>
+                    </Button>
+                    <Button asChild variant="outline" size="icon" aria-label={`Abrir perfil público de ${pet.name}`}>
+                      <Link href={`/p/${pet.public_token}`}><ExternalLink size={16} /></Link>
+                    </Button>
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
