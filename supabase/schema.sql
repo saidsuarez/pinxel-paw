@@ -24,6 +24,7 @@ create table public.pets (
   color text,
   weight numeric(6,2),
   photo_url text,
+  profile_theme text not null default 'azul' check (profile_theme in ('azul', 'rosado', 'morado', 'rojo', 'verde', 'naranja', 'pastel', 'tierra', 'neon', 'grafito')),
   public_token text not null unique,
   nfc_enabled boolean not null default true,
   is_public_enabled boolean not null default true,
@@ -144,6 +145,7 @@ begin
       'color', p.color,
       'weight', p.weight,
       'photo_url', case when coalesce(s.show_pet_photo, true) then p.photo_url else null end,
+      'profile_theme', p.profile_theme,
       'public_token', p.public_token
     ),
     'owner', case

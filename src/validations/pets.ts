@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { petProfileThemeIds } from "@/lib/pet-profile-themes";
 
 export const petSchema = z.object({
   owner_id: z.string().uuid("Selecciona un propietario válido.").optional(),
@@ -10,6 +11,7 @@ export const petSchema = z.object({
   color: z.string().optional(),
   weight: z.coerce.number().positive().optional().or(z.literal("")),
   photo_url: z.string().url().optional().or(z.literal("")),
+  profile_theme: z.enum(petProfileThemeIds).default("azul"),
   public_token: z
     .string()
     .trim()

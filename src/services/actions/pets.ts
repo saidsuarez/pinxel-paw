@@ -34,6 +34,7 @@ export async function createPet(values: unknown) {
       color: parsed.data.color || null,
       weight: parsed.data.weight === "" ? null : parsed.data.weight,
       photo_url: parsed.data.photo_url || null,
+      profile_theme: parsed.data.profile_theme,
       public_token: token
     })
     .select("id")
@@ -62,6 +63,7 @@ export async function updatePet(id: string, values: unknown) {
     color: parsed.data.color || null,
     weight: parsed.data.weight === "" ? null : parsed.data.weight,
     photo_url: parsed.data.photo_url || null,
+    profile_theme: parsed.data.profile_theme,
     public_token: parsed.data.public_token ? normalizePublicToken(parsed.data.public_token) : undefined
   };
   const { owner_id: _ownerId, nfc_enabled: _nfcEnabled, public_token: _publicToken, ...customerPayload } = payload;

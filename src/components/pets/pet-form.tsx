@@ -9,12 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
+import { getPetProfileTheme, petProfileThemeIds, petProfileThemes } from "@/lib/pet-profile-themes";
 import { normalizePublicToken } from "@/lib/utils";
 import type { Pet, Profile } from "@/types";
 import { checkPublicTokenAvailability, createPet, updatePet } from "@/services/actions/pets";
 import { petSchema } from "@/validations/pets";
 
-type FormValues = z.infer<typeof petSchema>;
+type FormValues = z.input<typeof petSchema>;
 const maxPhotoSize = 5 * 1024 * 1024;
 
 export function PetForm({
@@ -44,6 +45,7 @@ export function PetForm({
       color: pet?.color ?? "",
       weight: pet?.weight ?? "",
       photo_url: pet?.photo_url ?? "",
+      profile_theme: getPetProfileTheme(pet?.profile_theme).id,
       public_token: pet?.public_token ?? "",
       nfc_enabled: pet?.nfc_enabled ?? true,
       is_public_enabled: pet?.is_public_enabled ?? true
@@ -147,6 +149,29 @@ export function PetForm({
       <Field label="Fecha de nacimiento" id="birth_date" type="date" register={form.register("birth_date")} />
       <Field label="Color" id="color" register={form.register("color")} />
       <Field label="Peso kg" id="weight" type="number" step="0.1" register={form.register("weight")} />
+      <div className="space-y-3 md:col-span-2">
+        <Label>Theme del perfil público</Label>
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+          {petProfileThemeIds.map((themeId) => {
+            const theme = petProfileThemes[themeId];
+
+            return (
+              <label
+                key={theme.id}
+                className="flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl border bg-white px-3 py-2 text-sm transition-colors hover:border-primary"
+              >
+                <input type="radio" value={theme.id} className="sr-only peer" {...form.register("profile_theme")} />
+                <span
+                  className="h-6 w-6 rounded-full border border-black/10 shadow-sm ring-offset-2 peer-checked:ring-2 peer-checked:ring-primary"
+                  style={{ background: theme.swatch }}
+                />
+                <span className="font-medium">{theme.label}</span>
+              </label>
+            );
+          })}
+        </div>
+        <p className="text-xs text-muted-foreground">Este theme solo afecta el perfil público de esta mascota.</p>
+      </div>
       {canManageProtectedFields ? (
         <div className="space-y-2 md:col-span-2">
           <Label htmlFor="public_token">Enlace público</Label>

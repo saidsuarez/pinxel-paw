@@ -22,6 +22,7 @@ export type Pet = {
   color: string | null;
   weight: number | null;
   photo_url: string | null;
+  profile_theme: string;
   public_token: string;
   nfc_enabled: boolean;
   is_public_enabled: boolean;
