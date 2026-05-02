@@ -7,6 +7,25 @@ import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile, requireUser } from "@/services/auth";
 import { petSchema, publicSettingsSchema } from "@/validations/pets";
 
+type PetMutationError = {
+  code?: string;
+  message?: string;
+};
+
+function getPetMutationMessage(error: PetMutationError, fallback: string) {
+  if (error.code === "23505") return "Ese enlace público ya está en uso.";
+  if (error.code === "23514") return "El theme seleccionado no está permitido en la base de datos.";
+  if (
+    error.code === "42703"
+    || error.code === "PGRST204"
+    || error.message?.includes("profile_theme")
+  ) {
+    return "Falta aplicar la migración del theme en Supabase o refrescar el schema cache.";
+  }
+
+  return fallback;
+}
+
 export async function createPet(values: unknown) {
   await requireUser();
   const profile = await getCurrentProfile();
@@ -40,8 +59,7 @@ export async function createPet(values: unknown) {
     .select("id")
     .single();
 
-  if (error?.code === "23505") return { ok: false, message: "Ese enlace público ya está en uso." };
-  if (error) return { ok: false, message: "No pudimos crear la mascota. Revisa los datos e intenta de nuevo." };
+  if (error) return { ok: false, message: getPetMutationMessage(error, "No pudimos crear la mascota. Revisa los datos e intenta de nuevo.") };
 
   await supabase.from("public_profile_settings").insert({ pet_id: data.id });
   revalidatePath("/pets");
@@ -73,8 +91,7 @@ export async function updatePet(id: string, values: unknown) {
     .update(profile?.role === "admin" ? payload : customerPayload)
     .eq("id", id);
 
-  if (error?.code === "23505") return { ok: false, message: "Ese enlace público ya está en uso." };
-  if (error) return { ok: false, message: "No pudimos guardar los cambios. Revisa los datos e intenta de nuevo." };
+  if (error) return { ok: false, message: getPetMutationMessage(error, "No pudimos guardar los cambios. Revisa los datos e intenta de nuevo.") };
   revalidatePath(`/pets/${id}`);
   redirect(`/pets/${id}`);
 }
