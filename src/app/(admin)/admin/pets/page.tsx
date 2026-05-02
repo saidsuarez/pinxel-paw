@@ -21,6 +21,11 @@ export default async function AdminPetsPage({ searchParams }: { searchParams?: P
       : Promise.resolve({ data: null })
   ]);
   const pets = data ?? [];
+  const ownerIds = [...new Set(pets.map((pet) => pet.owner_id))];
+  const { data: ownersData } = ownerIds.length > 0
+    ? await supabase.from("profiles").select("user_id, full_name, email").in("user_id", ownerIds).returns<Pick<Profile, "user_id" | "full_name" | "email">[]>()
+    : { data: [] };
+  const ownersById = new Map((ownersData ?? []).map((petOwner) => [petOwner.user_id, petOwner]));
   const ownerLabel = owner ? owner.full_name ?? owner.email : null;
 
   return (
@@ -42,35 +47,44 @@ export default async function AdminPetsPage({ searchParams }: { searchParams?: P
           <TableHeader>
             <TableRow>
               <TableHead>Mascota</TableHead>
+              <TableHead>Usuario</TableHead>
               <TableHead>Token público</TableHead>
               <TableHead>Estado</TableHead>
               <TableHead className="text-right">Acciones</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {pets.map((pet) => (
-              <TableRow key={pet.id}>
-                <TableCell>
-                  <p className="font-medium">{pet.name}</p>
-                  <p className="text-sm text-muted-foreground">{pet.species}</p>
-                </TableCell>
-                <TableCell className="break-all">{pet.public_token}</TableCell>
-                <TableCell><Badge variant={pet.nfc_enabled ? "success" : "neutral"}>{pet.nfc_enabled ? "Perfil activo" : "Perfil inactivo"}</Badge></TableCell>
-                <TableCell>
-                  <div className="flex justify-end gap-2">
-                    <Button asChild variant="outline" size="icon" aria-label={`Ver ${pet.name}`}>
-                      <Link href={`/pets/${pet.id}`}><Eye size={16} /></Link>
-                    </Button>
-                    <Button asChild variant="outline" size="icon" aria-label={`Editar ${pet.name}`}>
-                      <Link href={`/pets/${pet.id}/edit`}><Pencil size={16} /></Link>
-                    </Button>
-                    <Button asChild variant="outline" size="icon" aria-label={`Abrir perfil público de ${pet.name}`}>
-                      <Link href={`/p/${pet.public_token}`}><ExternalLink size={16} /></Link>
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+            {pets.map((pet) => {
+              const petOwner = ownersById.get(pet.owner_id);
+
+              return (
+                <TableRow key={pet.id}>
+                  <TableCell>
+                    <p className="font-medium">{pet.name}</p>
+                    <p className="text-sm text-muted-foreground">{pet.species}</p>
+                  </TableCell>
+                  <TableCell>
+                    <p className="font-medium">{petOwner?.full_name ?? "Sin nombre"}</p>
+                    <p className="break-all text-sm text-muted-foreground">{petOwner?.email ?? "Sin correo"}</p>
+                  </TableCell>
+                  <TableCell className="break-all">{pet.public_token}</TableCell>
+                  <TableCell><Badge variant={pet.nfc_enabled ? "success" : "neutral"}>{pet.nfc_enabled ? "Perfil activo" : "Perfil inactivo"}</Badge></TableCell>
+                  <TableCell>
+                    <div className="flex justify-end gap-2">
+                      <Button asChild variant="outline" size="icon" aria-label={`Ver ${pet.name}`}>
+                        <Link href={`/pets/${pet.id}`}><Eye size={16} /></Link>
+                      </Button>
+                      <Button asChild variant="outline" size="icon" aria-label={`Editar ${pet.name}`}>
+                        <Link href={`/pets/${pet.id}/edit`}><Pencil size={16} /></Link>
+                      </Button>
+                      <Button asChild variant="outline" size="icon" aria-label={`Abrir perfil público de ${pet.name}`}>
+                        <Link href={`/p/${pet.public_token}`}><ExternalLink size={16} /></Link>
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </div>
