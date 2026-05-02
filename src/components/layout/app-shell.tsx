@@ -12,6 +12,7 @@ import type { Profile } from "@/types";
 const customerLinks = [
   { href: "/dashboard", label: "Inicio", icon: Home },
   { href: "/pets", label: "Mascotas", icon: PawPrint },
+  { href: "/records", label: "Registros", icon: ClipboardList },
   { href: "/settings", label: "Cuenta", icon: Settings }
 ];
 

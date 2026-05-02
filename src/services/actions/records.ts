@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/services/auth";
 import { recordSchema } from "@/validations/records";
 
-export async function createVeterinaryRecord(petId: string, values: unknown) {
+export async function createVeterinaryRecord(petId: string, values: unknown, redirectTo?: string) {
   await requireUser();
   const parsed = recordSchema.safeParse(values);
   if (!parsed.success) return { ok: false, message: "Revisa los datos del registro." };
@@ -24,5 +24,6 @@ export async function createVeterinaryRecord(petId: string, values: unknown) {
 
   if (error) return { ok: false, message: "No pudimos crear el registro. Revisa los datos e intenta de nuevo." };
   revalidatePath(`/pets/${petId}`);
-  redirect(`/pets/${petId}/records`);
+  revalidatePath("/records");
+  redirect(redirectTo ?? `/pets/${petId}/records`);
 }

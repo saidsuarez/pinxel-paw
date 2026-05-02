@@ -13,7 +13,7 @@ import { recordSchema } from "@/validations/records";
 
 type FormValues = z.infer<typeof recordSchema>;
 
-export function RecordForm({ petId }: { petId: string }) {
+export function RecordForm({ petId, redirectTo }: { petId: string; redirectTo?: string }) {
   const [message, setMessage] = useState<string>();
   const [isPending, startTransition] = useTransition();
   const form = useForm<FormValues>({
@@ -32,7 +32,7 @@ export function RecordForm({ petId }: { petId: string }) {
 
   function onSubmit(values: FormValues) {
     startTransition(async () => {
-      const result = await createVeterinaryRecord(petId, values);
+      const result = await createVeterinaryRecord(petId, values, redirectTo);
       setMessage(result?.message);
     });
   }
