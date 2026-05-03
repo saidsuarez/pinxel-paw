@@ -21,7 +21,6 @@ const adminLinks = [
   { href: "/admin", label: "Admin", icon: ShieldCheck },
   { href: "/admin/users", label: "Usuarios", icon: Users },
   { href: "/admin/pets", label: "Mascotas", icon: PawPrint },
-  { href: "/admin/records", label: "Registros", icon: ClipboardList },
   { href: "/settings", label: "Cuenta", icon: Settings }
 ];
 
