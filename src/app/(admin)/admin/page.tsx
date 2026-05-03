@@ -20,13 +20,25 @@ export default async function AdminPage() {
       <div className="grid gap-4 md:grid-cols-3">
         <Stat title="Usuarios" value={users ?? 0} href="/admin/users" icon={Users} />
         <Stat title="Mascotas" value={pets ?? 0} href="/admin/pets" icon={PawPrint} />
-        <Stat title="Registros" value={records ?? 0} href="/admin/records" icon={ClipboardList} />
+        <Stat title="Registros gestionados" value={records ?? 0} icon={ClipboardList} description="Actividad total creada por clientes." />
       </div>
     </>
   );
 }
 
-function Stat({ title, value, href, icon: Icon }: { title: string; value: number; href: string; icon: ComponentType<{ size?: number }> }) {
+function Stat({
+  title,
+  value,
+  href,
+  icon: Icon,
+  description
+}: {
+  title: string;
+  value: number;
+  href?: string;
+  icon: ComponentType<{ size?: number }>;
+  description?: string;
+}) {
   return (
     <Card>
       <CardHeader>
@@ -34,12 +46,15 @@ function Stat({ title, value, href, icon: Icon }: { title: string; value: number
       </CardHeader>
       <CardContent>
         <p className="text-3xl font-semibold">{value}</p>
-        <Button asChild variant="outline" size="sm" className="mt-4">
-          <Link href={href}>
-            <Icon size={16} />
-            Gestionar
-          </Link>
-        </Button>
+        {description ? <p className="mt-2 text-sm text-muted-foreground">{description}</p> : null}
+        {href ? (
+          <Button asChild variant="outline" size="sm" className="mt-4">
+            <Link href={href}>
+              <Icon size={16} />
+              Gestionar
+            </Link>
+          </Button>
+        ) : null}
       </CardContent>
     </Card>
   );
