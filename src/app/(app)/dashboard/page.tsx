@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ClipboardList, ShieldCheck } from "lucide-react";
 import { Badge, type BadgeVariant } from "@/components/ui/badge";
+import { AdminDashboard } from "@/components/admin/admin-dashboard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/layout/page-header";
 import { createClient } from "@/lib/supabase/server";
@@ -15,10 +16,11 @@ type RecordWithPet = VeterinaryRecord & {
 export default async function DashboardPage() {
   const user = await requireUser();
   const profile = await getCurrentProfile();
+  if (profile?.role === "admin") return <AdminDashboard />;
+
   const supabase = await createClient();
   const petsQuery = supabase.from("pets").select("*").order("created_at", { ascending: false });
-  const { data: petsData } =
-    profile?.role === "admin" ? await petsQuery.returns<Pet[]>() : await petsQuery.eq("owner_id", user.id).returns<Pet[]>();
+  const { data: petsData } = await petsQuery.eq("owner_id", user.id).returns<Pet[]>();
   const pets = petsData ?? [];
 
   const petIds = pets.map((pet) => pet.id);
@@ -27,36 +29,10 @@ export default async function DashboardPage() {
     .select("*, pets(id, name)")
     .order("date", { ascending: false })
     .limit(6);
-  const { data: recordsData } = profile?.role === "admin" || petIds.length === 0
+  const { data: recordsData } = petIds.length === 0
     ? { data: [] }
     : await recordsQuery.in("pet_id", petIds).returns<RecordWithPet[]>();
   const records = recordsData ?? [];
-  const { count: totalRecords = 0 } = profile?.role === "admin"
-    ? await supabase.from("veterinary_records").select("*", { count: "exact", head: true })
-    : { count: null };
-
-  if (profile?.role === "admin") {
-    return (
-      <>
-        <PageHeader
-          title={`Hola, ${profile?.full_name ?? "bienvenido"}`}
-          description="Resumen agregado de la plataforma. Los registros los administra cada cliente."
-        />
-        <div className="grid gap-4 md:grid-cols-4">
-          <Stat title="Mascotas" value={pets.length} />
-          <Stat title="Perfiles activos" value={pets.filter((pet) => pet.nfc_enabled).length} />
-          <Stat title="Públicos" value={pets.filter((pet) => pet.is_public_enabled).length} />
-          <Stat title="Registros gestionados" value={totalRecords ?? 0} />
-        </div>
-        <Card className="mt-6">
-          <CardContent className="flex items-start gap-3 p-5 text-sm text-muted-foreground">
-            <ClipboardList className="mt-0.5 text-primary" size={18} />
-            <p>Los registros veterinarios son administrados por cada usuario. Desde admin se muestran como indicador de actividad general, no como flujo operativo principal.</p>
-          </CardContent>
-        </Card>
-      </>
-    );
-  }
 
   return (
     <>

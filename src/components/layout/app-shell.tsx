@@ -18,7 +18,6 @@ const customerLinks = [
 
 const adminLinks = [
   { href: "/dashboard", label: "Inicio", icon: Home },
-  { href: "/admin", label: "Admin", icon: ShieldCheck },
   { href: "/admin/users", label: "Usuarios", icon: Users },
   { href: "/admin/pets", label: "Mascotas", icon: PawPrint },
   { href: "/settings", label: "Cuenta", icon: Settings }
